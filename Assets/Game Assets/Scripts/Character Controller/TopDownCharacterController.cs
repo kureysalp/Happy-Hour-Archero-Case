@@ -1,3 +1,5 @@
+using ArcheroCase.Enums;
+using ArcheroCase.Game;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -5,29 +7,26 @@ namespace ArcheroCase.Character_Controller
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class CharacterController : MonoBehaviour
+    public class TopDownCharacterController : MonoBehaviour
     {
-        [SerializeField] private ControllerConfig _config;
-
         private Joystick _joystick;
         private Rigidbody _rigidbody;
 
         [SerializeField] private bool _normalizeJoystickInput;
         [SerializeField] private bool _useAnimator;
-    
-
-        private Avatar _avatar;
-
         [SerializeField] private bool _useNavmeshForBoundaries;
 
         private NavMeshAgent _navMeshAgent;
     
         private float _navMeshBoundaryCheckDistance = .1f;
+        
+        private Player _player;
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
-
+            _player = GetComponent<Player>();
+            
             if (!_useAnimator) return;
 
             var animatorController = gameObject.AddComponent<AnimatorController>();
@@ -49,11 +48,13 @@ namespace ArcheroCase.Character_Controller
         private void Movement()
         {
             var input = _normalizeJoystickInput ? _joystick.Direction.normalized.magnitude : _joystick.Direction.magnitude;
-
-            if (input <= _config.MovementThreshold) return;
-
-            var movementVector = transform.position + _config.ForwardSpeed * input * Time.deltaTime * transform.forward;
-
+            _player.ChangeState(CharacterState.LookingForEnemy);
+            
+            if (input <= _player.Config.MovementThreshold) return;
+            
+            _player.ChangeState(CharacterState.Moving);
+            
+            var movementVector = transform.position + _player.Config.ForwardSpeed * input * Time.deltaTime * transform.forward;
             if (_useNavmeshForBoundaries)
             {
                 if (NavMesh.SamplePosition(movementVector, out var hit, _navMeshBoundaryCheckDistance, NavMesh.AllAreas))
@@ -66,10 +67,10 @@ namespace ArcheroCase.Character_Controller
         private void Rotation()
         {
             var input = _joystick.Direction;
-            if (input.magnitude <= _config.RotationThreshold) return;
+            if (input.magnitude <= _player.Config.RotationThreshold) return;
 
             var dir = Quaternion.Euler(0, Mathf.Atan2(input.x, input.y) * 180 / Mathf.PI, 0);
-            transform.rotation = Quaternion.Lerp(transform.rotation, dir, Time.deltaTime * _config.RotateSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, dir, Time.deltaTime * _player.Config.RotateSpeed);
         }
     }
 }
