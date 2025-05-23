@@ -48,11 +48,8 @@ namespace ArcheroCase.Character_Controller
         private void Movement()
         {
             var input = _normalizeJoystickInput ? _joystick.Direction.normalized.magnitude : _joystick.Direction.magnitude;
-            _player.ChangeState(CharacterState.LookingForEnemy);
-            
             if (input <= _player.Config.MovementThreshold) return;
             
-            _player.ChangeState(CharacterState.Moving);
             
             var movementVector = transform.position + _player.Config.ForwardSpeed * input * Time.deltaTime * transform.forward;
             if (_useNavmeshForBoundaries)

@@ -8,10 +8,15 @@ namespace ArcheroCase.Combat
 {
     public class EnemyDetector : MonoBehaviour
     {
+        [SerializeField] private LayerMask _enemyLayer;
+        
         private Player _player;
-        private Collider[] _enemyColliders;
+        public Collider[] _enemyColliders;
 
         public static event Action<Enemy> OnEnemyDetected;
+        public static event Action OnEnemyOutOfRange;
+
+        private Enemy _currentDetectedEnemy;
         
         private void Awake()
         {
@@ -25,16 +30,17 @@ namespace ArcheroCase.Combat
 
         private void LookForEnemy()
         {
-            if (_player.CharacterState != CharacterState.LookingForEnemy) return;
+            if (_player.IsPlayerMoving) return;
 
             var maxColliderCount = 5;
             
             _enemyColliders= new Collider[maxColliderCount];
 
             var enemyCountInRange =
-                Physics.OverlapSphereNonAlloc(transform.position, _player.Config.EnemyDetectRange, _enemyColliders);
+                Physics.OverlapSphereNonAlloc(transform.position, _player.Config.EnemyDetectRange, _enemyColliders,
+                    _enemyLayer);
 
-            var distanceBetweenEnemy = _player.Config.EnemyDetectRange;
+            var distanceBetweenEnemy = _player.Config.EnemyDetectRange * _player.Config.EnemyDetectRange;
             Transform closestEnemy = null;
             for (int i = 0; i < enemyCountInRange; i++)
             {
@@ -45,10 +51,26 @@ namespace ArcheroCase.Combat
                 closestEnemy = currentEnemyTransform;
             }
             
-            if(closestEnemy is null) return;
+            if(closestEnemy is null)
+            {
+                _currentDetectedEnemy = null;
+                OnEnemyOutOfRange?.Invoke();
+                return;
+            }
+
+            if (!closestEnemy.transform.TryGetComponent(out Enemy enemy)) return;
+            if (enemy == _currentDetectedEnemy) return;
             
-            if(transform.TryGetComponent(out Enemy enemy))
-                OnEnemyDetected?.Invoke(enemy);
+            _currentDetectedEnemy = enemy;
+            OnEnemyDetected?.Invoke(enemy);
+            
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!Application.isPlaying) return;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, _player.Config.EnemyDetectRange);
         }
     }
 }

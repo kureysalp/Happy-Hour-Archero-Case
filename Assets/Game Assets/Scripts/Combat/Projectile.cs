@@ -10,31 +10,45 @@ namespace ArcheroCase.Combat
         
         protected Rigidbody _rigidbody;
 
+        private bool _isTravelling;
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            Travel();
+            if (_isTravelling)
+                Travel();
         }
 
         private void Travel()
         {
-            var gravity = Physics.gravity;
-            var forwardVelocity = _config.Speed * Time.deltaTime * transform.forward; 
-            var finalVelocity = forwardVelocity + gravity;
-            _rigidbody.velocity = finalVelocity;
+            var eulerRotation = _rigidbody.transform.eulerAngles;
+            var newRotation =
+                Quaternion.Euler(Quaternion.AngleAxis(Physics.gravity.y*Time.deltaTime, transform.right) *
+                                 eulerRotation);
+            _rigidbody.MoveRotation(newRotation);
         }
 
         private void OnCollisionEnter(Collision other)
         {
+            _rigidbody.isKinematic = true;
+            _isTravelling = false;
+            
             if (other.transform.TryGetComponent(out IDamageable iDamageable))
             {
                ProjectileHit(iDamageable);
-                ReturnToPool();
+               ReturnToPool();
             }
+        }
+
+        public void SetVelocity(Vector3 velocity)
+        {
+            _isTravelling = true;
+            _rigidbody.isKinematic = false;
+            _rigidbody.velocity = velocity;
         }
 
         protected virtual void ProjectileHit(IDamageable iDamageable)

@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 190318e8f5f504da2942127904891649, type: 3}
-  m_Name: SO_Character_Controller_Config
+  m_Script: {fileID: 11500000, guid: 306ea8d16599428bad5efcdc7a1ca39f, type: 3}
+  m_Name: SO_Projectile_Config
   m_EditorClassIdentifier: 
-  _forwardSpeed: 0
-  _rotateSpeed: 0
-  _movementThreshold: 0
-  _rotationThreshold: 0
+  _damage: 2
+  _speed: 7
+  _hitLayer:
+    serializedVersion: 2
+    m_Bits: 0

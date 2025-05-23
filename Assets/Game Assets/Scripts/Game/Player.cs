@@ -9,15 +9,23 @@ namespace ArcheroCase.Game
         public PlayerConfig Config => _config;
 
         
-        private CharacterState _characterState;
+       [SerializeField] private CharacterState _characterState;
         public CharacterState CharacterState => _characterState;
+        
+
+        public bool IsPlayerMoving { get; private set; }
+        
+        public Joystick Joystick { get; private set; }
 
 
-        public void ChangeState(CharacterState newState)
+        private void Start()
         {
-            _characterState = newState;
+            Joystick = Joystick.Instance;  
         }
 
-
+        private void Update()
+        {
+            IsPlayerMoving = Joystick.Direction.magnitude > 0;
+        }
     }
 }

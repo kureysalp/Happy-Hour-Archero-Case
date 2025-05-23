@@ -1,21 +1,22 @@
 ﻿using System;
+using ArcheroCase.Mangers;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ArcheroCase.Combat
 {
-    public class Enemy : MonoBehaviour, IDamageable
+    public class Enemy : Poolable, IDamageable
     {
         [SerializeField] private EnemyConfig _config;
         private float _currentHealth;
         
         [SerializeField] private Image _healthBar;
 
-        public static event Action OnEnemyDeath;
+        public static event Action<Enemy> OnEnemyDeath;
         
         private bool _isDead;
         
-        private void SetEnemy()
+        public void SetEnemy()
         {
             _currentHealth = _config.MaximumHealth;
             SetHealthBar();
@@ -38,11 +39,10 @@ namespace ArcheroCase.Combat
                 Die();
         }
 
-        private void Die()
+        public void Die()
         {
             _isDead = true;
-            OnEnemyDeath?.Invoke();
-            // TODO: Return this to the pool.
+            OnEnemyDeath?.Invoke(this);
         }
     }
 }
