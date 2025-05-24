@@ -2,6 +2,7 @@
 using ArcheroCase.Character_Controller;
 using ArcheroCase.Enums;
 using ArcheroCase.Game;
+using ArcheroCase.Utility;
 using UnityEngine;
 
 namespace ArcheroCase.Combat
@@ -32,25 +33,8 @@ namespace ArcheroCase.Combat
         {
             if (_player.IsPlayerMoving) return;
 
-            var maxColliderCount = 5;
-            
-            _enemyColliders= new Collider[maxColliderCount];
+            var closestEnemy = Utilities.GetClosestEnemy(transform.position, _player.Config.EnemyDetectRange, _enemyLayer);
 
-            var enemyCountInRange =
-                Physics.OverlapSphereNonAlloc(transform.position, _player.Config.EnemyDetectRange, _enemyColliders,
-                    _enemyLayer);
-
-            var distanceBetweenEnemy = _player.Config.EnemyDetectRange * _player.Config.EnemyDetectRange;
-            Transform closestEnemy = null;
-            for (int i = 0; i < enemyCountInRange; i++)
-            {
-                var currentEnemyTransform = _enemyColliders[i].transform;
-                var tempDistanceBetweenEnemy = (transform.position - currentEnemyTransform.position).sqrMagnitude;
-                if (tempDistanceBetweenEnemy > distanceBetweenEnemy) continue;
-                distanceBetweenEnemy = tempDistanceBetweenEnemy;
-                closestEnemy = currentEnemyTransform;
-            }
-            
             if(closestEnemy is null)
             {
                 _currentDetectedEnemy = null;
@@ -65,6 +49,8 @@ namespace ArcheroCase.Combat
             OnEnemyDetected?.Invoke(enemy);
             
         }
+
+        
 
         private void OnDrawGizmos()
         {

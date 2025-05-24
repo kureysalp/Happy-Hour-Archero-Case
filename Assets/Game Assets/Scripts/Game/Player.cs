@@ -1,4 +1,6 @@
-﻿using ArcheroCase.Enums;
+﻿using System;
+using ArcheroCase.Enums;
+using ArcheroCase.PowerUps;
 using UnityEngine;
 
 namespace ArcheroCase.Game
@@ -17,6 +19,12 @@ namespace ArcheroCase.Game
         
         public Joystick Joystick { get; private set; }
 
+        private void Awake()
+        {
+            PowerUpButton.OnPowerUpActivate += ActivatePowerUp;
+            PowerUpButton.OnPowerUpDeactivate += DeactivatePowerUp;
+        }
+
 
         private void Start()
         {
@@ -26,6 +34,22 @@ namespace ArcheroCase.Game
         private void Update()
         {
             IsPlayerMoving = Joystick.Direction.magnitude > 0;
+        }
+
+        private void ActivatePowerUp(PowerUp powerUp)
+        {
+            powerUp.Activate(this);
+        }
+        
+        private void DeactivatePowerUp(PowerUp powerUp)
+        {
+            powerUp.Deactivate(this);
+        }
+
+        private void OnDisable()
+        {
+            PowerUpButton.OnPowerUpActivate -= ActivatePowerUp;
+            PowerUpButton.OnPowerUpDeactivate -= DeactivatePowerUp;
         }
     }
 }

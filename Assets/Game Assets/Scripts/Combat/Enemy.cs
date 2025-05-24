@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using ArcheroCase.Auras;
 using ArcheroCase.Mangers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +17,16 @@ namespace ArcheroCase.Combat
         public static event Action<Enemy> OnEnemyDeath;
         
         private bool _isDead;
-        
+
+        private readonly List<Aura> _activeAuras = new();
+
+        private void Update()
+        {
+            var tempAuras = _activeAuras.ToArray();
+            foreach (var aura in tempAuras)
+                aura.AuraUpdateTick(this);
+        }
+
         public void SetEnemy()
         {
             _currentHealth = _config.MaximumHealth;
@@ -43,6 +54,22 @@ namespace ArcheroCase.Combat
         {
             _isDead = true;
             OnEnemyDeath?.Invoke(this);
+        }
+
+        public void ApplyAura(Aura aura)
+        {
+            _activeAuras.Add(aura);
+        }
+
+        public void RemoveAura(Aura aura)
+        {
+            _activeAuras.Remove(aura);
+        }
+
+        protected override void Reset()
+        {
+            base.Reset();
+            _activeAuras.Clear();
         }
     }
 }
