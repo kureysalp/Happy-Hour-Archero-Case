@@ -25,17 +25,13 @@ namespace ArcheroCase.Combat
 
         private void FixedUpdate()
         {
-            /*if (_isTravelling)
-                Travel();*/
+            if (_isTravelling)
+                Travel();
         }
 
         private void Travel()
         {
-            var eulerRotation = _rigidbody.transform.eulerAngles;
-            var newRotation =
-                Quaternion.Euler(Quaternion.AngleAxis(Physics.gravity.y*Time.deltaTime, transform.right) *
-                                 eulerRotation);
-            _rigidbody.MoveRotation(newRotation);
+            transform.forward = Vector3.Slerp(transform.forward, _rigidbody.velocity.normalized, Time.deltaTime * -Physics.gravity.y);
         }
 
         private void OnCollisionEnter(Collision other)
@@ -57,6 +53,8 @@ namespace ArcheroCase.Combat
 
         public void ShootBullet(Vector3 velocity)
         {
+            _rigidbody.angularVelocity = Vector3.zero;
+            
             _isTravelling = true;
             _rigidbody.isKinematic = false;
             _rigidbody.velocity = velocity;
