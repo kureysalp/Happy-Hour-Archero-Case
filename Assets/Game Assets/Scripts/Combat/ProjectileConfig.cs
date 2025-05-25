@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ArcheroCase.Auras;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -24,16 +25,11 @@ namespace ArcheroCase.Combat
 
         public List<Aura> ActiveAuras { get; } = new();
 
-        public void AddBounceCountModifier(int modifier)
+        public void SetBouneCountModifier(int modifier)
         {
-            _bounceCountModifier += modifier;
+            _bounceCountModifier = modifier;
         }
         
-        public void RemoveBounceCountModifier(int modifier)
-        {
-            _bounceCountModifier -= modifier;
-        }
-
         public void AddAura(Aura aura)
         {
             ActiveAuras.Add(aura);
@@ -44,5 +40,9 @@ namespace ArcheroCase.Combat
             ActiveAuras.Remove(aura);
         }
 
+        private void OnValidate()
+        {
+            _bounceCountModifier = 0;
+        }
     }
 }

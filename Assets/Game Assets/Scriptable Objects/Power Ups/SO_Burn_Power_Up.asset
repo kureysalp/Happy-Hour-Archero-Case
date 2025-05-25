@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Enemy Burn
   _duration: 3
-  _damage: 10
+  _damage: 2

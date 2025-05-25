@@ -12,7 +12,7 @@ namespace ArcheroCase.Utility
 
             var enemyCountInRange =
                 Physics.OverlapSphereNonAlloc(positionToCheck, detectRadius, enemyColliders,
-                    enemyLayer);
+                    enemyLayer, QueryTriggerInteraction.Collide);
 
             var distanceBetweenEnemy = detectRadius * detectRadius;
             Transform closestEnemy = null;
@@ -36,7 +36,7 @@ namespace ArcheroCase.Utility
 
             var enemyCountInRange =
                 Physics.OverlapSphereNonAlloc(positionToCheck, detectRadius, enemyColliders,
-                    enemyLayer);
+                    enemyLayer, QueryTriggerInteraction.Collide);
 
             var distanceBetweenEnemy = detectRadius * detectRadius;
             Transform closestEnemy = null;

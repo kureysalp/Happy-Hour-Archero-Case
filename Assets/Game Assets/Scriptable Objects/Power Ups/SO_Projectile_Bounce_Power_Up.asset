@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SO_Projectile_Bounce_Power_Up
   m_EditorClassIdentifier: 
   _name: Projectile Bounce
-  _bounceCount: 1
+  _bounceCount: 2

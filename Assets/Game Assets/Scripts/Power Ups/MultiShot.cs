@@ -1,4 +1,5 @@
-﻿using ArcheroCase.Game;
+﻿using System;
+using ArcheroCase.Game;
 using UnityEngine;
 
 namespace ArcheroCase.PowerUps
@@ -17,6 +18,26 @@ namespace ArcheroCase.PowerUps
         public override void Deactivate(Player player)
         {
             player.Config.SetMultishotCountModifier(0);
+        }
+
+        public override void EnableRage(Player player)
+        {
+            _multiShotAmount++;
+            if (player.HasPowerUp(this))
+                player.Config.SetMultishotCountModifier(_multiShotAmount);
+        }
+
+        public override void DisableRage(Player player)
+        {
+            _multiShotAmount--;
+            if (player.HasPowerUp(this))
+                player.Config.SetMultishotCountModifier(_multiShotAmount);
+            
+        }
+
+        private void OnValidate()
+        {
+            _multiShotAmount = 1;
         }
     }
 }

@@ -32,6 +32,11 @@ namespace ArcheroCase.Auras
                 enemy.TakeDamage(_burnDamage);
             }
         }
+
+        public void ChangeDuration(float duration)
+        {
+            AuraDuration = duration;
+        }
         
     }
 }

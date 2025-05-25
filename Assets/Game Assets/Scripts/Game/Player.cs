@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ArcheroCase.Enums;
 using ArcheroCase.PowerUps;
 using UnityEngine;
@@ -10,9 +11,7 @@ namespace ArcheroCase.Game
         [SerializeField] private PlayerConfig _config;
         public PlayerConfig Config => _config;
 
-        
-       [SerializeField] private CharacterState _characterState;
-        public CharacterState CharacterState => _characterState;
+        private readonly List<PowerUp> _activePowerUps = new();
         
 
         public bool IsPlayerMoving { get; private set; }
@@ -39,17 +38,24 @@ namespace ArcheroCase.Game
         private void ActivatePowerUp(PowerUp powerUp)
         {
             powerUp.Activate(this);
+            _activePowerUps.Add(powerUp);
         }
         
         private void DeactivatePowerUp(PowerUp powerUp)
         {
             powerUp.Deactivate(this);
+            _activePowerUps.Remove(powerUp);
         }
 
         private void OnDisable()
         {
             PowerUpButton.OnPowerUpActivate -= ActivatePowerUp;
             PowerUpButton.OnPowerUpDeactivate -= DeactivatePowerUp;
+        }
+
+        public bool HasPowerUp(PowerUp powerUp)
+        {
+            return _activePowerUps.Contains(powerUp);
         }
     }
 }

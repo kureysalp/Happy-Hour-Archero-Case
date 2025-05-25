@@ -1,3 +1,4 @@
+using System;
 using ArcheroCase.Combat;
 using UnityEngine;
 
@@ -49,6 +50,10 @@ namespace ArcheroCase.Game
             _multishotCountModifier = modifier;
         }
 
-        
+        private void OnValidate()
+        {
+            _multishotCountModifier = 0;
+            _fireRateMultiplier = 1.0f;
+        }
     }
 }

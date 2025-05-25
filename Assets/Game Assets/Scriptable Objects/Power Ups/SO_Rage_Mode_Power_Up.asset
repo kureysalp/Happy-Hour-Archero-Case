@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a955bcd38cee470393d3cc4e69a91cc8, type: 3}
+  m_Name: SO_Rage_Mode_Power_Up
+  m_EditorClassIdentifier: 
+  _name: Rage Mode
+  _powerUpsToApply:
+  - {fileID: 11400000, guid: 8f52650f4e5d4ab4f941dab43108d99c, type: 2}
+  - {fileID: 11400000, guid: 0a03d40fd4604a94589f5db3734f800b, type: 2}
+  - {fileID: 11400000, guid: 79cf2e2ce054feb419e3ff1f5de9be16, type: 2}
+  - {fileID: 11400000, guid: d42dc08b68bd60840baaf96f36fb55b4, type: 2}

@@ -11,5 +11,9 @@ namespace ArcheroCase.PowerUps
         public abstract void Activate(Player player);
         
         public abstract void Deactivate(Player player);
+        
+        public virtual void EnableRage(Player player) {}
+        public virtual void DisableRage(Player player) {}
+        
     }
 }

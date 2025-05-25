@@ -1,4 +1,5 @@
-﻿using ArcheroCase.Auras;
+﻿using System;
+using ArcheroCase.Auras;
 using ArcheroCase.Mangers;
 using ArcheroCase.Utility;
 using UnityEngine;
@@ -24,8 +25,8 @@ namespace ArcheroCase.Combat
 
         private void FixedUpdate()
         {
-            if (_isTravelling)
-                Travel();
+            /*if (_isTravelling)
+                Travel();*/
         }
 
         private void Travel()
@@ -38,6 +39,11 @@ namespace ArcheroCase.Combat
         }
 
         private void OnCollisionEnter(Collision other)
+        {
+            ReturnToPool();
+        }
+
+        private void OnTriggerEnter(Collider other)
         {
             if(other.transform == _lastHitEnemyTransform) return;
             
@@ -78,6 +84,7 @@ namespace ArcheroCase.Combat
         private void BounceToEnemy()
         {
             _isTravelling = false;
+            _rigidbody.isKinematic = false;
             
             _bounceCountLeft--;
             var enemyInBounceRange =
@@ -90,7 +97,7 @@ namespace ArcheroCase.Combat
             }
 
             var lookAtPosition = enemyInBounceRange.position;
-            lookAtPosition.y = 0;
+            lookAtPosition.y = transform.position.y;
             transform.LookAt(lookAtPosition);
             
             _rigidbody.velocity = _config.Speed * transform.forward;
@@ -99,7 +106,7 @@ namespace ArcheroCase.Combat
         protected override void Reset()
         {
             base.Reset();
-            _rigidbody.isKinematic = true;
+            _rigidbody.isKinematic = false;
             _isTravelling = false;
             _lastHitEnemyTransform = null;
         }
